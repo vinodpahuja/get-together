@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f4ef">
+  <title>Get Together</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --canvas: #f4f4ef;
+      --paper: #fff;
+      --ink: #202922;
+      --muted: #737c74;
+      --line: #e4e7df;
+      --green: #23634f;
+      --green-soft: #e9f1eb;
+      --coral: #c75f47;
+      --yellow: #f0c967;
+      --shadow: 0 12px 32px rgba(35, 51, 42, .055);
+      font-family: "Aptos", "Segoe UI", sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--canvas); color: var(--ink); min-width: 320px; }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    .topbar { height: 62px; display: flex; align-items: center; justify-content: space-between; padding: 0 5vw; border-bottom: 1px solid #e6e7df; background: rgba(255,255,255,.62); }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .01em; }
+    .brand-mark { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 9px; color: white; background: var(--green); font-family: Georgia, serif; font-size: 19px; }
+    .topbar-actions { display: flex; align-items: center; gap: 16px; }
+    .local-note { color: var(--muted); font-size: 12px; display: flex; align-items: center; gap: 7px; }
+    .local-note::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #5e9a72; }
+    .share-button { display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 1px solid var(--line); border-radius: 5px; color: var(--green); background: white; }
+    .share-button:hover { border-color: var(--green); background: var(--green-soft); }
+    .share-button svg { width: 17px; height: 17px; }
+    .share-dialog { width: min(560px, calc(100vw - 32px)); padding: 20px; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); background: var(--paper); box-shadow: var(--shadow); }
+    .share-dialog::backdrop { background: rgba(22, 32, 26, .42); }
+    .share-dialog-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .share-dialog-head h2 { margin: 0; font: 500 21px Georgia, serif; }
+    .share-dialog-copy { margin: 9px 0 16px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+    .share-link-row { display: flex; gap: 8px; }
+    .share-link-row input { flex: 1; min-width: 0; height: 38px; padding: 0 9px; border: 1px solid var(--line); border-radius: 4px; color: var(--ink); background: white; font-size: 12px; }
+    .share-close { display: grid; place-items: center; width: 32px; height: 32px; border: 0; border-radius: 4px; color: var(--muted); background: transparent; font-size: 20px; }
+    .share-close:hover { background: var(--canvas); }
+    main { max-width: 1220px; margin: 0 auto; padding: 25px 28px 60px; }
+    .family-settlement { margin-bottom: 24px; }
+    .families-section { min-width: 0; }
+    .family-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 7px; background: var(--paper); box-shadow: 0 4px 14px rgba(35,51,42,.025); }
+    .family-table { width: 100%; min-width: 540px; border-collapse: collapse; table-layout: fixed; }
+    .family-table th, .family-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; }
+    .family-table th { color: var(--muted); background: rgba(255,255,255,.45); font-size: 10px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+    .family-table th:nth-child(1) { width: 30%; }
+    .family-table th:nth-child(2), .family-table th:nth-child(3) { width: 17%; }
+    .family-table th:nth-child(4) { width: 25%; }
+    .family-table th:nth-child(5) { width: 11%; }
+    .family-table .number { text-align: right; white-space: nowrap; }
+    .family-table .family-action { text-align: center; }
+    .family-table tfoot th, .family-table tfoot td { padding: 12px; border-top: 1px solid var(--line); border-bottom: 0; background: rgba(35,99,79,.035); }
+    .family-table tfoot th { color: var(--ink); font-size: 12px; font-weight: 750; letter-spacing: 0; text-align: left; text-transform: none; }
+    .family-table tfoot strong { font-size: 12px; font-variant-numeric: tabular-nums; }
+    .total-difference { display: grid; justify-items: end; gap: 3px; }
+    .total-difference span { color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    .family-head-input { display: block; width: 100%; min-width: 0; height: 30px; padding: 0 6px; border: 1px solid transparent; border-radius: 3px; outline: 0; color: var(--ink); background: transparent; font-size: 13px; font-weight: 650; }
+    .family-head-input:focus { border-color: #a9c3b6; background: white; }
+    .family-table strong { font-size: 12px; font-variant-numeric: tabular-nums; }
+    .layout { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; gap: 16px; }
+    .section-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 0 0 12px; }
+    .section-heading h2 { margin: 0; font: 500 21px/1.2 Georgia, serif; }
+    .count { margin-left: 7px; color: var(--muted); font: 12px "Aptos", "Segoe UI", sans-serif; }
+    .button { display: inline-flex; justify-content: center; align-items: center; gap: 7px; min-height: 36px; padding: 0 12px; border: 1px solid var(--green); border-radius: 5px; color: white; background: var(--green); font-size: 12px; font-weight: 650; transition: background .15s, transform .15s; }
+    .button:hover { background: #194d3d; transform: translateY(-1px); }
+    .button svg { width: 15px; height: 15px; }
+    .button-secondary { color: var(--green); background: transparent; }
+    .button-secondary:hover { color: white; }
+    .expenses { display: grid; gap: 12px; }
+    .expense { overflow: hidden; border: 1px solid var(--line); border-radius: 7px; background: var(--paper); box-shadow: 0 4px 14px rgba(35,51,42,.025); animation: arrive .25s ease both; }
+    @keyframes arrive { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    .expense-head { display: flex; align-items: center; gap: 12px; padding: 15px 17px; border-bottom: 1px solid var(--line); }
+    .expense.is-collapsed .expense-allocations { display: none; }
+    .expense-index { display: grid; place-items: center; flex: 0 0 29px; height: 29px; border-radius: 50%; color: var(--green); background: var(--green-soft); font: 14px Georgia, serif; }
+    .expense-title { flex: 1; min-width: 0; border: 0; outline: 0; color: var(--ink); background: transparent; font: 500 18px Georgia, serif; }
+    .expense-title:focus { box-shadow: 0 1px var(--green); }
+    .expense-price { flex: 0 1 126px; }
+    .expense-price input { width: 100%; height: 34px; border: 1px solid var(--line); border-radius: 4px; color: var(--ink); background: white; text-align: right; font-size: 12px; }
+    .expense-total { white-space: nowrap; font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .icon-button { display: inline-grid; place-items: center; flex: 0 0 30px; width: 30px; height: 30px; border: 0; border-radius: 5px; color: var(--muted); background: transparent; }
+    .icon-button:hover { color: var(--coral); background: #fbefeb; }
+    .icon-button svg { width: 16px; height: 16px; }
+    .expense-body { padding: 14px 17px 16px; }
+    .subhead { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; color: var(--muted); font-size: 10px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+    .subrow { display: grid; grid-template-columns: minmax(145px, 1fr) 90px; gap: 6px; align-items: center; min-height: 39px; border-bottom: 1px solid #f0f1ed; }
+    .rows-heading { display: grid; grid-template-columns: minmax(145px, 1fr) 90px; gap: 6px; }
+    .subrow input, .subrow select, .paid-row select, .paid-row input { width: 100%; min-width: 0; height: 32px; padding: 0 8px; border: 1px solid transparent; border-radius: 4px; outline: 0; color: var(--ink); background: transparent; font-size: 12px; }
+    .subrow input:focus, .subrow select:focus, .paid-row select:focus, .paid-row input:focus { border-color: #a9c3b6; background: white; }
+    .subrow input.amount, .paid-row input.amount { text-align: right; font-variant-numeric: tabular-nums; }
+    .row-total { overflow: hidden; color: var(--ink); font-size: 12px; font-weight: 650; text-align: right; text-overflow: clip; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .amount-wrap { position: relative; }
+    .amount-wrap::before { content: "₹"; position: absolute; top: 9px; left: 7px; z-index: 1; color: #8a928b; font-size: 11px; pointer-events: none; }
+    .amount-wrap input { padding-left: 17px; }
+    .subrow .icon-button { justify-self: end; }
+    .add-line { margin: 9px 0 15px; padding: 4px 0; border: 0; color: var(--green); background: none; font-size: 11px; font-weight: 700; }
+    .add-line:hover { text-decoration: underline; }
+    .equal-share { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 11px; letter-spacing: 0; text-transform: none; }
+    .equal-share input { accent-color: var(--green); }
+    .equal-share { flex: 0 0 auto; white-space: nowrap; }
+    .collapse-button svg { transition: transform .15s ease; }
+    .collapse-button[aria-expanded="true"] svg { transform: rotate(180deg); }
+    .paid-block { padding-top: 12px; border-top: 1px dashed var(--line); }
+    .paid-row { display: grid; grid-template-columns: minmax(130px, 1fr) 98px 30px; gap: 8px; align-items: center; min-height: 37px; }
+    .settlement-value { text-align: right; font-size: 12px; font-weight: 650; line-height: 1.35; font-variant-numeric: tabular-nums; }
+    .settlement-warning { margin: 10px 0 0; color: #99543e; font-size: 11px; }
+    .payer-total { margin-top: 3px; color: var(--muted); font-size: 11px; text-align: right; }
+    .empty-state { padding: 34px 20px; border: 1px dashed #cbd3c9; border-radius: 7px; color: var(--muted); background: rgba(255,255,255,.45); text-align: center; font-size: 13px; }
+    .empty-state strong { display: block; margin-bottom: 5px; color: var(--ink); font: 500 19px Georgia, serif; }
+    .footnote { margin: 12px 2px 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+    .toast { position: fixed; right: 20px; bottom: 20px; padding: 10px 14px; border-radius: 5px; color: white; background: #26372e; font-size: 12px; opacity: 0; transform: translateY(5px); pointer-events: none; transition: .2s; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    @media (max-width: 760px) {
+      .topbar { height: 55px; padding: 0 18px; }
+      main { padding: 27px 16px 40px; }
+      .layout { grid-template-columns: 1fr; gap: 24px; }
+    }
+    @media (max-width: 480px) {
+      .local-note { font-size: 0; gap: 0; }
+      .local-note::before { width: 8px; height: 8px; }
+      .subrow, .rows-heading { grid-template-columns: minmax(90px, 1fr) 64px; gap: 3px; }
+      .subrow input, .subrow select { padding: 0 4px; font-size: 11px; }
+      .subrow input, .subrow select, .row-total { font-size: 10px; }
+      .paid-row { grid-template-columns: minmax(110px, 1fr) 78px 26px; gap: 3px; }
+      .paid-row select { padding: 0 4px; font-size: 11px; }
+      .expense-head { gap: 6px; padding: 12px 9px; }
+      .expense-body { padding: 12px 10px 13px; }
+      .expense-title { font-size: 16px; }
+      .expense-price { flex-basis: 72px; }
+      .expense-head .icon-button { width: 26px; flex-basis: 26px; }
+      .expense-head .equal-share { gap: 3px; font-size: 10px; }
+      .expense-head .expense-total { font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark" aria-hidden="true">g</span> Get Together</div>
+    <div class="topbar-actions">
+      <button class="share-button" id="shareButton" type="button" aria-label="Create share link" title="Create share link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l2-2A5 5 0 0 0 12 3.93l-1.15 1.14M14 11a5 5 0 0 0-7.07 0l-2 2A5 5 0 0 0 12 20.07l1.15-1.14"/></svg></button>
+      <div class="local-note">Saved on this device</div>
+    </div>
+  </header>
+  <main>
+    <section class="family-settlement" aria-labelledby="familiesTitle">
+      <div class="families-section">
+        <div class="section-heading">
+          <div><h2 id="familiesTitle">Who’s joining? <span class="count" id="familyCount"></span></h2></div>
+          <button class="button button-secondary" id="addFamily" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Add family</button>
+        </div>
+        <div class="family-table-wrap">
+          <table class="family-table">
+            <thead><tr><th scope="col">Family head</th><th class="number" scope="col">Share</th><th class="number" scope="col">Paid</th><th class="number" scope="col">Settlement</th><th class="family-action" scope="col"><span class="visually-hidden">Actions</span></th></tr></thead>
+            <tbody id="familyList"></tbody>
+            <tfoot><tr class="family-total-row">
+              <th scope="row">Total</th>
+              <td class="number"><strong id="grandTotal">₹0.00</strong></td>
+              <td class="number"><strong id="paidTotal">₹0.00</strong></td>
+              <td class="number"><div class="total-difference"><span>Difference</span><strong id="difference">₹0.00</strong></div></td>
+              <td></td>
+            </tr></tfoot>
+          </table>
+        </div>
+        <p class="settlement-warning" id="settlementWarning" hidden></p>
+      </div>
+    </section>
+    <div class="layout">
+      <section aria-labelledby="expensesTitle">
+        <div class="section-heading">
+          <h2 id="expensesTitle">Expenses <span class="count" id="expenseCount"></span></h2>
+          <button class="button" id="addExpense" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Add expense</button>
+        </div>
+        <div class="expenses" id="expenses"></div>
+      </section>
+    </div>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog class="share-dialog" id="shareDialog" aria-labelledby="shareDialogTitle">
+    <div class="share-dialog-head"><h2 id="shareDialogTitle">Share this bill</h2><button class="share-close" id="closeShareDialog" type="button" aria-label="Close">&times;</button></div>
+    <p class="share-dialog-copy">The link shows the bill data in a readable format. Anyone with the link can view and edit their copy.</p>
+    <div class="share-link-row"><input id="shareUrl" type="url" readonly aria-label="Share link"><button class="button" id="copyShareUrl" type="button">Copy link</button></div>
+  </dialog>
+  <script>
+    (() => {
+      const storageKey = 'gathering-bill-v2';
+      const icons = {
+        remove: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M10 11v6m4-6v6M5 7l1 13h12l1-13M9 7V4h6v3"/></svg>'
+      };
+      const decodeField = value => decodeURIComponent(value || '');
+      const encodeField = value => encodeURIComponent(String(value ?? '')).replace(/[!'()*@,|~+;=]/g, character => `%${character.charCodeAt(0).toString(16).toUpperCase()}`);
+      const isBillState = value => value && Array.isArray(value.people) && Array.isArray(value.payers) && Array.isArray(value.expenses) && value.expenses.every(expense => Array.isArray(expense.rows) && Array.isArray(expense.payments));
+      const shareToken = location.hash.startsWith('#data=') ? location.hash.slice(6) : '';
+      const decodeReadableShare = token => {
+        const sections = token.split('|');
+        const familyEntries = sections.shift().split(',').filter(Boolean).map((entry, index) => {
+          const separator = entry.indexOf('-');
+          return { id: `family-${index + 1}`, name: `Family ${index + 1}`, headName: decodeField(entry.slice(separator + 1)) };
+        });
+        const payers = familyEntries.map((family, index) => ({ id: `head-${index + 1}`, name: family.headName, familyId: family.id }));
+        const expenses = sections.filter(Boolean).map((entry, index) => {
+          const [item, ...details] = entry.split(',');
+          const separator = item.indexOf('@');
+          const title = decodeField(item.slice(0, separator));
+          const unitPrice = Number(item.slice(separator + 1)) || 0;
+          let equalShare = false;
+          const rows = [];
+          const payments = [];
+          details.filter(Boolean).forEach(detail => {
+            if (detail === 'EQ') equalShare = true;
+            else if (/^F\d+\+/.test(detail)) {
+              const match = detail.match(/^F(\d+)\+(.+)$/);
+              const family = familyEntries[Number(match[1]) - 1];
+              if (family) rows.push({ id: `row-${index + 1}-${match[1]}`, personId: family.id, count: Number(match[2]) || 0 });
+            } else if (/^P\d+\+/.test(detail)) {
+              const match = detail.match(/^P(\d+)\+(.+)$/);
+              const payer = payers[Number(match[1]) - 1];
+              if (payer) payments.push({ id: `payment-${index + 1}-${match[1]}`, payerId: payer.id, amount: Number(match[2]) || 0 });
+            }
+          });
+          return { id: `expense-${index + 1}`, title, unitPrice, equalShare, rows, payments };
+        });
+        return { people: familyEntries, payers, expenses };
+      };
+      let sharedState = null;
+      try {
+        const decoded = shareToken ? decodeReadableShare(shareToken) : null;
+        if (isBillState(decoded)) sharedState = decoded;
+      } catch { sharedState = null; }
+      const shareFingerprint = shareToken ? Array.from(shareToken).reduce((hash, character) => Math.imul(hash ^ character.charCodeAt(0), 16777619), 2166136261).toString(36) : '';
+      const activeStorageKey = sharedState ? `${storageKey}-share-${shareFingerprint}` : storageKey;
+      let state;
+      try {
+        const saved = JSON.parse(localStorage.getItem(activeStorageKey));
+        if (isBillState(saved)) state = saved;
+        else if (sharedState) state = sharedState;
+        else state = { people: [], payers: [], expenses: [] };
+      } catch { state = { people: [], payers: [], expenses: [] }; }
+
+      const money = value => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2 }).format(Number(value) || 0);
+      const safe = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+      const id = prefix => prefix + '-' + Math.random().toString(36).slice(2, 10);
+      const rowTotal = (expense, row) => (Number(row.count) || 0) * (Number(expense.unitPrice) || 0);
+      const expenseTotal = expense => expense.equalShare ? Number(expense.unitPrice) || 0 : expense.rows.reduce((sum, row) => sum + rowTotal(expense, row), 0);
+      const expensePaid = expense => expense.payments.reduce((sum, payment) => sum + (Number(payment.amount) || 0), 0);
+      const expensePersonTotal = (expense, personId) => {
+        if (!expense.equalShare) return expense.rows.filter(row => row.personId === personId).reduce((sum, row) => sum + rowTotal(expense, row), 0);
+        const familyIndex = state.people.findIndex(family => family.id === personId);
+        if (familyIndex < 0 || !state.people.length) return 0;
+        const totalPaise = Math.round((Number(expense.unitPrice) || 0) * 100);
+        return (Math.floor(totalPaise / state.people.length) + (familyIndex < totalPaise % state.people.length ? 1 : 0)) / 100;
+      };
+      const personTotal = personId => state.expenses.reduce((sum, expense) => sum + expensePersonTotal(expense, personId), 0);
+      const payerTotal = payerId => state.expenses.reduce((sum, expense) => sum + expense.payments.filter(payment => payment.payerId === payerId).reduce((subtotal, row) => subtotal + (Number(row.amount) || 0), 0), 0);
+      const toPaise = amount => Math.round((Number(amount) || 0) * 100);
+      const nameKey = name => String(name || '').toLocaleLowerCase().replace(/\b(family|ji)\b/g, ' ').replace(/[^a-z0-9]+/g, ' ').trim();
+      const payerFamilyId = payer => {
+        if (state.people.some(family => family.id === payer.familyId)) return payer.familyId;
+        const payerKey = nameKey(payer.name);
+        if (!payerKey) return '';
+        const matches = state.people.filter(family => {
+          const familyKey = nameKey(family.name);
+          return familyKey && (payerKey === familyKey || payerKey.startsWith(familyKey + ' ') || familyKey.startsWith(payerKey + ' '));
+        });
+        return matches.length === 1 ? matches[0].id : '';
+      };
+      const payerForFamily = familyId => state.payers.find(payer => payerFamilyId(payer) === familyId);
+      const familyName = family => {
+        const headName = payerForFamily(family.id)?.name.trim();
+        return headName ? `${headName}'s family` : family.name || 'Unnamed family';
+      };
+      state.people.forEach(family => {
+        if (!payerForFamily(family.id)) state.payers.push({ id: id('head'), name: '', familyId: family.id });
+      });
+      const persist = () => localStorage.setItem(activeStorageKey, JSON.stringify(state));
+      const options = (list, selectedId, emptyLabel, labelFor = entry => entry.name) => {
+        const placeholder = `<option value="">${safe(emptyLabel)}</option>`;
+        return placeholder + list.map(entry => `<option value="${safe(entry.id)}" ${entry.id === selectedId ? 'selected' : ''}>${safe(labelFor(entry) || 'Unnamed')}</option>`).join('');
+      };
+      const removeButton = (type, expenseId, rowId) => {
+        const label = type === 'remove-expense' ? 'Delete item' : type === 'remove-payment' ? 'Remove contribution' : 'Remove row';
+        return `<button class="icon-button" type="button" data-action="${type}" data-expense="${safe(expenseId)}" data-row="${safe(rowId || '')}" aria-label="${label}" title="${label}">${icons.remove}</button>`;
+      };
+
+      function renderExpense(expense, index) {
+        const rows = expense.equalShare ? '' : state.people.map(family => {
+          const row = expense.rows.find(entry => entry.personId === family.id) || { id: `allocation-${expense.id}-${family.id}`, personId: family.id, count: 0 };
+          return `
+          <div class="subrow">
+            <span data-family-name="${safe(family.id)}">${safe(familyName(family))}</span>
+            <input type="number" min="0" step="1" value="${safe(row.count ?? 0)}" placeholder="0" aria-label="${safe(familyName(family))} quantity" data-kind="row" data-expense="${safe(expense.id)}" data-row="${safe(row.id)}" data-family="${safe(family.id)}" data-field="count">
+          </div>`;
+        }).join('');
+        const payments = expense.payments.map(payment => `
+          <div class="paid-row">
+            <select aria-label="Family head" data-kind="payment" data-expense="${safe(expense.id)}" data-row="${safe(payment.id)}" data-field="payerId">${options(state.payers, payment.payerId, 'Choose family head')}</select>
+            <div class="amount-wrap"><input class="amount" type="number" min="0" step="0.01" value="${safe(payment.amount)}" placeholder="0.00" aria-label="Contribution amount" data-kind="payment" data-expense="${safe(expense.id)}" data-row="${safe(payment.id)}" data-field="amount"></div>
+            ${removeButton('remove-payment', expense.id, payment.id)}
+          </div>`).join('');
+        return `<article class="expense${expense.collapsed ? ' is-collapsed' : ''}" data-expense-card="${safe(expense.id)}">
+          <div class="expense-head"><span class="expense-index">${String(index + 1).padStart(2, '0')}</span>
+            <input class="expense-title" type="text" value="${safe(expense.title)}" placeholder="Expense name" aria-label="Expense name" data-kind="expense" data-expense="${safe(expense.id)}" data-field="title">
+            <div class="amount-wrap expense-price"><input class="amount" type="number" min="0" step="0.01" value="${safe(expense.unitPrice)}" placeholder="Price" aria-label="${expense.equalShare ? 'Item total' : 'Unit price'}" data-kind="expense" data-expense="${safe(expense.id)}" data-field="unitPrice"></div>
+            <span class="expense-total" data-total="${safe(expense.id)}">${money(expenseTotal(expense))}</span>
+            <label class="equal-share" title="Split this item equally among families"><input type="checkbox" data-kind="expense" data-expense="${safe(expense.id)}" data-field="equalShare" ${expense.equalShare ? 'checked' : ''}> Equal</label>
+            <button class="icon-button collapse-button" type="button" data-action="toggle-collapse" data-expense="${safe(expense.id)}" aria-controls="expense-allocations-${safe(expense.id)}" aria-label="${expense.collapsed ? 'Expand' : 'Collapse'} item" aria-expanded="${!expense.collapsed}" title="${expense.collapsed ? 'Expand item' : 'Collapse item'}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+            ${removeButton('remove-expense', expense.id)}
+          </div>
+          <div class="expense-body">
+            <div class="expense-allocations" id="expense-allocations-${safe(expense.id)}">${expense.equalShare ? '' : `
+            <div class="subhead"><span>Family quantities</span></div>
+            <div class="subhead rows-heading"><span>Family</span><span>Qty</span></div>
+            <div class="rows">${rows}</div>`}</div>
+            <div class="paid-block"><div class="subhead"><span>Paid by</span><span>Contribution</span></div>
+              <div class="payments">${payments}</div>
+              <button class="add-line" type="button" data-action="add-payment" data-expense="${safe(expense.id)}">+ Add payer contribution</button>
+              <div class="payer-total">Contributions entered: <strong data-paid="${safe(expense.id)}">${money(expensePaid(expense))}</strong></div>
+            </div>
+          </div>
+        </article>`;
+      }
+
+      function render() {
+        document.getElementById('familyCount').textContent = `${state.people.length} families`;
+        document.getElementById('familyList').innerHTML = state.people.length ? state.people.map(family => {
+          const payer = payerForFamily(family.id);
+          return `<tr data-family-entry="${safe(family.id)}">
+            <td><input class="family-head-input" type="text" value="${safe(payer?.name || '')}" placeholder="Family head" aria-label="Family head name" data-kind="payer" data-row="${safe(payer?.id || '')}" data-field="name"></td>
+            <td class="number"><strong data-family-total="${safe(family.id)}">${money(personTotal(family.id))}</strong></td>
+            <td class="number"><strong data-payer-total="${safe(family.id)}">${money(payer ? payerTotal(payer.id) : 0)}</strong></td>
+            <td class="settlement-value" data-settlement-family="${safe(family.id)}">—</td>
+            <td class="family-action"><button class="icon-button" type="button" data-action="remove-family" data-family="${safe(family.id)}" aria-label="Remove ${safe(payer?.name || 'family')}" title="Remove family">${icons.remove}</button></td>
+          </tr>`;
+          }).join('') : '<tr><td class="empty-state" colspan="5">No families added. Add a family head to get started.</td></tr>';
+        document.getElementById('expenses').innerHTML = state.expenses.length
+          ? state.expenses.map(renderExpense).join('')
+          : '<div class="empty-state"><strong>No expenses yet</strong>Add the first bill item when you are ready.</div>';
+        document.getElementById('expenseCount').textContent = state.expenses.length;
+        updateSummary();
+        persist();
+      }
+
+      function updateFamilyNames() {
+        state.people.forEach(family => {
+          document.querySelectorAll(`[data-family-name="${CSS.escape(family.id)}"]`).forEach(label => {
+            label.textContent = familyName(family);
+          });
+          document.querySelectorAll(`select[data-field="personId"] option[value="${CSS.escape(family.id)}"]`).forEach(option => {
+            option.textContent = familyName(family);
+          });
+        });
+      }
+
+      function settlementPlan() {
+        const balances = new Map(state.people.map(family => [family.id, -toPaise(personTotal(family.id))]));
+        let unlinkedPayments = 0;
+        state.payers.forEach(payer => {
+          const familyId = payerFamilyId(payer);
+          state.expenses.forEach(expense => expense.payments.filter(payment => payment.payerId === payer.id).forEach(payment => {
+            if (balances.has(familyId)) balances.set(familyId, balances.get(familyId) + toPaise(payment.amount));
+            else unlinkedPayments += toPaise(payment.amount);
+          }));
+        });
+        const debtors = [...balances].filter(([, balance]) => balance < 0).map(([familyId, balance]) => ({ familyId, amount: -balance }));
+        const creditors = [...balances].filter(([, balance]) => balance > 0).map(([familyId, balance]) => ({ familyId, amount: balance }));
+        const transfers = [];
+        let debtorIndex = 0;
+        let creditorIndex = 0;
+        while (debtorIndex < debtors.length && creditorIndex < creditors.length) {
+          const debtor = debtors[debtorIndex];
+          const creditor = creditors[creditorIndex];
+          const amount = Math.min(debtor.amount, creditor.amount);
+          transfers.push({ fromFamilyId: debtor.familyId, toFamilyId: creditor.familyId, amount });
+          debtor.amount -= amount;
+          creditor.amount -= amount;
+          if (debtor.amount === 0) debtorIndex++;
+          if (creditor.amount === 0) creditorIndex++;
+        }
+        const unbalanced = debtors.slice(debtorIndex).reduce((sum, entry) => sum + entry.amount, 0) + creditors.slice(creditorIndex).reduce((sum, entry) => sum + entry.amount, 0);
+        return { transfers, unlinkedPayments, unbalanced };
+      }
+
+      function renderSettlement() {
+        const plan = settlementPlan();
+        const totals = new Map(state.people.map(family => [family.id, { paid: 0, received: 0, pays: new Set(), receivedFrom: new Set() }]));
+        plan.transfers.forEach(transfer => {
+          const payer = totals.get(transfer.fromFamilyId);
+          const payee = totals.get(transfer.toFamilyId);
+          payer.paid += transfer.amount;
+          payer.pays.add(transfer.toFamilyId);
+          payee.received += transfer.amount;
+          payee.receivedFrom.add(transfer.fromFamilyId);
+        });
+        totals.forEach((total, familyId) => {
+          const cell = document.querySelector(`[data-settlement-family="${CSS.escape(familyId)}"]`);
+          if (!cell) return;
+          const isPayer = total.paid > 0;
+          const amount = isPayer ? total.paid : total.received;
+          const counterparties = isPayer ? total.pays : total.receivedFrom;
+          const names = [...counterparties].map(counterpartyId => {
+            const family = state.people.find(entry => entry.id === counterpartyId);
+            return payerForFamily(counterpartyId)?.name.trim() || family?.name || 'Unnamed family';
+          }).join(', ');
+          cell.textContent = amount ? `${isPayer ? 'Pays' : 'Receives'} ${money(amount / 100)} ${isPayer ? 'to' : 'from'} ${names}` : 'Settled';
+        });
+        const warning = document.getElementById('settlementWarning');
+        const messages = [];
+        if (plan.unlinkedPayments) messages.push(`${money(plan.unlinkedPayments / 100)} in payments need a family link before they can be included.`);
+        if (plan.unbalanced) messages.push(`${money(plan.unbalanced / 100)} remains unmatched. Check that all expense shares and payments are entered.`);
+        warning.textContent = messages.join(' ');
+        warning.hidden = messages.length === 0;
+      }
+
+      function updateSummary() {
+        updateFamilyNames();
+        const expenses = state.expenses.reduce((sum, expense) => sum + expenseTotal(expense), 0);
+        const paid = state.expenses.reduce((sum, expense) => sum + expensePaid(expense), 0);
+        const difference = paid - expenses;
+        document.getElementById('grandTotal').textContent = money(expenses);
+        document.getElementById('paidTotal').textContent = money(paid);
+        document.getElementById('difference').textContent = (difference > 0 ? '+' : '') + money(difference);
+        renderSettlement();
+        state.expenses.forEach(expense => {
+          const total = document.querySelector(`[data-total="${CSS.escape(expense.id)}"]`);
+          const paidElement = document.querySelector(`[data-paid="${CSS.escape(expense.id)}"]`);
+          if (total) total.textContent = money(expenseTotal(expense));
+          if (paidElement) paidElement.textContent = money(expensePaid(expense));
+        });
+        state.people.forEach(family => {
+          const share = document.querySelector(`[data-family-total="${CSS.escape(family.id)}"]`);
+          const paid = document.querySelector(`[data-payer-total="${CSS.escape(family.id)}"]`);
+          const payer = payerForFamily(family.id);
+          if (share) share.textContent = money(personTotal(family.id));
+          if (paid) paid.textContent = money(payer ? payerTotal(payer.id) : 0);
+        });
+        persist();
+      }
+
+      function findRecord(target) {
+        if (target.dataset.kind === 'expense') return state.expenses.find(expense => expense.id === target.dataset.expense);
+        if (target.dataset.kind === 'person') return state.people.find(person => person.id === target.dataset.row);
+        if (target.dataset.kind === 'payer') return state.payers.find(payer => payer.id === target.dataset.row);
+        const expense = state.expenses.find(item => item.id === target.dataset.expense);
+        if (!expense) return null;
+        if (target.dataset.kind === 'payment') return expense.payments.find(row => row.id === target.dataset.row);
+        return expense.rows.find(row => row.id === target.dataset.row) || expense.rows.find(row => row.personId === target.dataset.family);
+      }
+
+      document.addEventListener('input', event => {
+        const target = event.target;
+        if (!target.matches('[data-kind][data-field]')) return;
+        if (target.type === 'checkbox') return;
+        const record = findRecord(target);
+        if (!record) return;
+        record[target.dataset.field] = ['count', 'unitPrice'].includes(target.dataset.field) ? (target.value === '' ? '' : Number(target.value)) : target.value;
+        updateSummary();
+      });
+      document.addEventListener('change', event => {
+        const target = event.target;
+        if (target.matches('input[type="checkbox"][data-kind="expense"]')) {
+          const expense = state.expenses.find(item => item.id === target.dataset.expense);
+          if (expense) { expense.equalShare = target.checked; expense.collapsed = target.checked; render(); }
+          return;
+        }
+        if (!target.matches('select[data-kind][data-field]')) return;
+        const record = findRecord(target);
+        if (!record) return;
+        record[target.dataset.field] = target.value;
+        updateSummary();
+      });
+      document.addEventListener('click', event => {
+        const button = event.target.closest('button[data-action]');
+        if (!button) return;
+        if (button.dataset.action === 'remove-family') {
+          const familyId = button.dataset.family;
+          const payerIds = state.payers.filter(payer => payerFamilyId(payer) === familyId).map(payer => payer.id);
+          state.people = state.people.filter(family => family.id !== familyId);
+          state.payers = state.payers.filter(payer => !payerIds.includes(payer.id));
+          state.expenses.forEach(expense => {
+            expense.rows = expense.rows.filter(row => row.personId !== familyId);
+            expense.payments = expense.payments.filter(payment => !payerIds.includes(payment.payerId));
+          });
+          render();
+          return;
+        }
+        const expense = state.expenses.find(item => item.id === button.dataset.expense);
+        if (!expense) return;
+        if (button.dataset.action === 'toggle-collapse') expense.collapsed = !expense.collapsed;
+        if (button.dataset.action === 'add-payment') expense.payments.push({ id: id('pay'), payerId: state.payers[0]?.id || '', amount: '' });
+        if (button.dataset.action === 'remove-payment') expense.payments = expense.payments.filter(payment => payment.id !== button.dataset.row);
+        if (button.dataset.action === 'remove-expense') state.expenses = state.expenses.filter(item => item.id !== expense.id);
+        render();
+      });
+      document.getElementById('addExpense').addEventListener('click', () => {
+        state.expenses.push({ id: id('expense'), title: '', unitPrice: '', equalShare: false, collapsed: false, rows: state.people.map(family => ({ id: id('row'), personId: family.id, count: 0 })), payments: [] });
+        render();
+        document.querySelector('.expense:last-child .expense-title')?.focus();
+      });
+      document.getElementById('addFamily').addEventListener('click', () => {
+        const familyId = id('family');
+        const payerId = id('head');
+        state.people.push({ id: familyId, name: `Family ${state.people.length + 1}` });
+        state.payers.push({ id: payerId, name: '', familyId });
+        state.expenses.forEach(expense => expense.rows.push({ id: id('row'), personId: familyId, count: 0 }));
+        render();
+        document.querySelector('#familyList tr:last-child input')?.focus();
+      });
+      const shareDialog = document.getElementById('shareDialog');
+      const shareUrlInput = document.getElementById('shareUrl');
+      const toast = document.getElementById('toast');
+      let toastTimer;
+      const announce = message => {
+        toast.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+      };
+      const buildShareUrl = () => {
+        const familyTokens = state.people.map((family, index) => `F${index + 1}-${encodeField(payerForFamily(family.id)?.name || '')}`);
+        const expenseTokens = state.expenses.map((expense, index) => {
+          const item = `${encodeField(expense.title || `Item ${index + 1}`)}@${Number(expense.unitPrice) || 0}`;
+          const allocations = expense.equalShare
+            ? ['EQ']
+            : state.people.map((family, familyIndex) => {
+              const row = expense.rows.find(entry => entry.personId === family.id);
+              return `F${familyIndex + 1}+${Number(row?.count) || 0}`;
+            });
+          const contributions = expense.payments.map(payment => {
+            const payerIndex = state.payers.findIndex(payer => payer.id === payment.payerId);
+            return payerIndex < 0 ? '' : `P${payerIndex + 1}+${Number(payment.amount) || 0}`;
+          }).filter(Boolean);
+          return [item, ...allocations, ...contributions].join(',');
+        });
+        return `${location.href.split('#')[0]}#data=${[familyTokens.join(','), ...expenseTokens].join('|')}`;
+      };
+      document.getElementById('shareButton').addEventListener('click', async () => {
+        shareUrlInput.value = buildShareUrl();
+        try {
+          await navigator.clipboard.writeText(shareUrlInput.value);
+          announce('Share link copied');
+        } catch {
+          shareDialog.showModal();
+          shareUrlInput.focus();
+          shareUrlInput.select();
+        }
+      });
+      document.getElementById('closeShareDialog').addEventListener('click', () => shareDialog.close());
+      document.getElementById('copyShareUrl').addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(shareUrlInput.value);
+          shareDialog.close();
+          announce('Share link copied');
+        } catch {
+          shareUrlInput.focus();
+          shareUrlInput.select();
+          announce('Link selected. Copy it to share.');
+        }
+      });
+      window.addEventListener('hashchange', () => window.location.reload());
+      render();
+    })();
+  </script>
+</body>
+</html>
