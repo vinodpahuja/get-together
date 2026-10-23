@@ -5,74 +5,115 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f4f4ef">
   <title>Get Together</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="theme.css">
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand"><span class="brand-mark" aria-hidden="true">gt</span> Get Together</div>
-    <div class="topbar-actions">
-      <button class="icon-action-button" id="newBillButton" type="button" aria-label="Start a new bill" title="Start a new bill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6M9 15h6"/></svg></button>
-      <button class="icon-action-button" id="openButton" type="button" aria-label="Open a saved bill" title="Open a saved bill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg></button>
-      <button class="icon-action-button" id="saveButton" type="button" aria-label="Save bill to this device" title="Save bill to this device"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 4h12l3 3v13H5V4Z"/><path d="M8 4v5h7V4M8 14h8v6H8z"/></svg></button>
-      <button class="icon-action-button" id="shareButton" type="button" aria-label="Create share link" title="Create share link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l2-2A5 5 0 0 0 12 3.93l-1.15 1.14M14 11a5 5 0 0 0-7.07 0l-2 2A5 5 0 0 0 12 20.07l1.15-1.14"/></svg></button>
-    </div>
-  </header>
-  <main>
-    <section class="family-settlement" aria-labelledby="familiesTitle">
-      <div class="families-section">
-        <div class="section-heading">
-          <div><h2 id="familiesTitle">Who’s joining? <span class="count" id="familyCount"></span></h2></div>
-          <button class="button button-secondary" id="addFamily" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Add family</button>
-        </div>
-        <div class="family-table-wrap">
-          <table class="family-table">
-            <thead><tr><th scope="col">Family head</th><th class="number" scope="col">Share</th><th class="number" scope="col">Paid</th><th class="number settlement-head" scope="col">Settlement</th><th class="family-action" scope="col"><span class="visually-hidden">Actions</span></th></tr></thead>
-            <tbody id="familyList"></tbody>
-            <tfoot><tr class="family-total-row">
-              <th scope="row">Total</th>
-              <td class="number"><strong id="grandTotal">₹0.00</strong></td>
-              <td class="number"><strong id="paidTotal">₹0.00</strong></td>
-              <td class="number"><div class="total-difference"><strong id="difference">₹0.00</strong></div></td>
-              <td></td>
-            </tr></tfoot>
-          </table>
-        </div>
-        <p class="settlement-warning" id="settlementWarning" hidden></p>
+  <nav class="navbar bg-body border-bottom">
+    <div class="container-fluid px-4">
+      <span class="navbar-brand d-flex align-items-center gap-2 mb-0">
+        <span class="badge rounded-pill bg-primary fst-italic">gt</span> Get Together
+      </span>
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-outline-primary btn-sm" id="newBillButton" type="button" aria-label="Start a new bill" title="Start a new bill"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6M9 15h6"/></svg></button>
+        <button class="btn btn-outline-primary btn-sm" id="openButton" type="button" aria-label="Open a saved bill" title="Open a saved bill"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg></button>
+        <button class="btn btn-outline-primary btn-sm" id="saveButton" type="button" aria-label="Save bill to this device" title="Save bill to this device"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 4h12l3 3v13H5V4Z"/><path d="M8 4v5h7V4M8 14h8v6H8z"/></svg></button>
+        <button class="btn btn-outline-primary btn-sm" id="shareButton" type="button" aria-label="Create share link" title="Create share link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l2-2A5 5 0 0 0 12 3.93l-1.15 1.14M14 11a5 5 0 0 0-7.07 0l-2 2A5 5 0 0 0 12 20.07l1.15-1.14"/></svg></button>
       </div>
+    </div>
+  </nav>
+  <main class="container-xl py-4 pb-5">
+    <section class="mb-4" aria-labelledby="familiesTitle">
+      <div class="d-flex justify-content-between align-items-center gap-3 mb-3">
+        <h2 class="h5 mb-0" id="familiesTitle">Who&rsquo;s joining? <span class="text-body-secondary fw-normal fs-6" id="familyCount"></span></h2>
+        <button class="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-1" id="addFamily" type="button"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Add family</button>
+      </div>
+      <div class="table-responsive border rounded-3 shadow-sm">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light"><tr><th scope="col">Family head</th><th class="text-end" scope="col">Share</th><th class="text-end" scope="col">Paid</th><th scope="col">Settlement</th><th class="text-center" scope="col"><span class="visually-hidden">Actions</span></th></tr></thead>
+          <tbody id="familyList"></tbody>
+          <tfoot class="table-group-divider"><tr class="table-active">
+            <th scope="row">Total</th>
+            <td class="text-end"><strong id="grandTotal">₹0.00</strong></td>
+            <td class="text-end"><strong id="paidTotal">₹0.00</strong></td>
+            <td class="text-end"><strong id="difference">₹0.00</strong></td>
+            <td></td>
+          </tr></tfoot>
+        </table>
+      </div>
+      <p class="text-danger-emphasis bg-danger-subtle border border-danger-subtle rounded-3 p-2 small mt-2 mb-0" id="settlementWarning" hidden></p>
     </section>
-    <div class="layout">
-      <section aria-labelledby="expensesTitle">
-        <div class="section-heading">
-          <h2 id="expensesTitle">Expenses <span class="count" id="expenseCount"></span></h2>
-          <button class="button" id="addExpense" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Add expense</button>
-        </div>
-        <div class="expenses" id="expenses"></div>
-      </section>
-    </div>
+    <section aria-labelledby="expensesTitle">
+      <div class="d-flex justify-content-between align-items-center gap-3 mb-3">
+        <h2 class="h5 mb-0" id="expensesTitle">Expenses <span class="text-body-secondary fw-normal fs-6" id="expenseCount"></span></h2>
+        <button class="btn btn-primary btn-sm d-inline-flex align-items-center gap-1" id="addExpense" type="button"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Add expense</button>
+      </div>
+      <div class="d-grid gap-3" id="expenses"></div>
+    </section>
   </main>
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <dialog class="share-dialog" id="shareDialog" aria-labelledby="shareDialogTitle">
-    <div class="share-dialog-head"><h2 id="shareDialogTitle">Share this bill</h2><button class="share-close" id="closeShareDialog" type="button" aria-label="Close">&times;</button></div>
-    <p class="share-dialog-copy">The link shows the bill data in a readable format. Anyone with the link can view and edit their copy.</p>
-    <div class="share-link-row"><input id="shareUrl" type="url" readonly aria-label="Share link"></div>
-    <div class="share-actions">
-      <button class="button button-secondary" id="copyShareUrl" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 9h10v10H9zM5 15V5h10"/></svg> Copy link</button>
-      <button class="button" id="nativeShareUrl" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l2-2A5 5 0 0 0 12 3.93l-1.15 1.14M14 11a5 5 0 0 0-7.07 0l-2 2A5 5 0 0 0 12 20.07l1.15-1.14"/></svg> Share link</button>
+
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div class="toast align-items-center text-bg-dark border-0" id="toast" role="status" aria-live="polite" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body" id="toastBody"></div>
+      </div>
     </div>
-  </dialog>
-  <dialog class="share-dialog" id="openDialog" aria-labelledby="openDialogTitle">
-    <div class="share-dialog-head"><h2 id="openDialogTitle">Open a saved bill</h2><button class="share-close" id="closeOpenDialog" type="button" aria-label="Close">&times;</button></div>
-    <p class="share-dialog-copy">Choose a bill saved on this device.</p>
-    <div class="bill-list" id="billList"></div>
-  </dialog>
-  <dialog class="share-dialog" id="confirmDialog" aria-labelledby="confirmDialogTitle">
-    <div class="share-dialog-head"><h2 id="confirmDialogTitle">Unsaved changes</h2><button class="share-close" id="closeConfirmDialog" type="button" aria-label="Close">&times;</button></div>
-    <p class="share-dialog-copy" id="confirmDialogMessage"></p>
-    <div class="share-actions">
-      <button class="button button-secondary" id="confirmDiscard" type="button">Discard</button>
-      <button class="button" id="confirmSave" type="button">Save &amp; continue</button>
+  </div>
+
+  <div class="modal fade" id="shareDialog" tabindex="-1" aria-labelledby="shareDialogTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content shadow">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="shareDialogTitle">Share this bill</h2>
+          <button class="btn-close" id="closeShareDialog" type="button" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-body-secondary small">The link shows the bill data in a readable format. Anyone with the link can view and edit their copy.</p>
+          <input id="shareUrl" class="form-control" type="url" readonly aria-label="Share link">
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-primary flex-fill d-inline-flex align-items-center justify-content-center gap-1" id="copyShareUrl" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 9h10v10H9zM5 15V5h10"/></svg> Copy link</button>
+          <button class="btn btn-primary flex-fill d-inline-flex align-items-center justify-content-center gap-1" id="nativeShareUrl" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l2-2A5 5 0 0 0 12 3.93l-1.15 1.14M14 11a5 5 0 0 0-7.07 0l-2 2A5 5 0 0 0 12 20.07l1.15-1.14"/></svg> Share link</button>
+        </div>
+      </div>
     </div>
-  </dialog>
+  </div>
+
+  <div class="modal fade" id="openDialog" tabindex="-1" aria-labelledby="openDialogTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content shadow">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="openDialogTitle">Open a saved bill</h2>
+          <button class="btn-close" id="closeOpenDialog" type="button" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-body-secondary small">Choose a bill saved on this device.</p>
+          <div class="list-group" id="billList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="confirmDialog" tabindex="-1" data-bs-backdrop="static" aria-labelledby="confirmDialogTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content shadow">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="confirmDialogTitle">Unsaved changes</h2>
+          <button class="btn-close" id="closeConfirmDialog" type="button" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="text-body-secondary small mb-0" id="confirmDialogMessage"></p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-primary flex-fill" id="confirmDiscard" type="button">Discard</button>
+          <button class="btn btn-primary flex-fill" id="confirmSave" type="button">Save &amp; continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
