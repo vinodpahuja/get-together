@@ -28,13 +28,11 @@
     button { cursor: pointer; }
     .topbar { height: 62px; display: flex; align-items: center; justify-content: space-between; padding: 0 5vw; border-bottom: 1px solid #e6e7df; background: rgba(255,255,255,.62); }
     .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: .01em; }
-    .brand-mark { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 9px; color: white; background: var(--green); font-family: Georgia, serif; font-size: 19px; }
-    .topbar-actions { display: flex; align-items: center; gap: 16px; }
-    .local-note { color: var(--muted); font-size: 12px; display: flex; align-items: center; gap: 7px; }
-    .local-note::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #5e9a72; }
-    .share-button { display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 1px solid var(--line); border-radius: 5px; color: var(--green); background: white; }
-    .share-button:hover { border-color: var(--green); background: var(--green-soft); }
-    .share-button svg { width: 17px; height: 17px; }
+    .brand-mark { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 9px; color: white; background: var(--green); font-family: Georgia, serif; font-size: 14px; font-style: italic; letter-spacing: -1px; }
+    .topbar-actions { display: flex; align-items: center; gap: 8px; }
+    .icon-action-button { display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 1px solid var(--line); border-radius: 5px; color: var(--green); background: white; }
+    .icon-action-button:hover { border-color: var(--green); background: var(--green-soft); }
+    .icon-action-button svg { width: 17px; height: 17px; }
     .share-dialog { width: min(560px, calc(100vw - 32px)); padding: 20px; border: 1px solid var(--line); border-radius: 8px; color: var(--ink); background: var(--paper); box-shadow: var(--shadow); }
     .share-dialog::backdrop { background: rgba(22, 32, 26, .42); }
     .share-dialog-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
@@ -42,8 +40,17 @@
     .share-dialog-copy { margin: 9px 0 16px; color: var(--muted); font-size: 12px; line-height: 1.5; }
     .share-link-row { display: flex; gap: 8px; }
     .share-link-row input { flex: 1; min-width: 0; height: 38px; padding: 0 9px; border: 1px solid var(--line); border-radius: 4px; color: var(--ink); background: white; font-size: 12px; }
+    .share-actions { display: flex; gap: 8px; margin-top: 12px; }
+    .share-actions .button { flex: 1; }
     .share-close { display: grid; place-items: center; width: 32px; height: 32px; border: 0; border-radius: 4px; color: var(--muted); background: transparent; font-size: 20px; }
     .share-close:hover { background: var(--canvas); }
+    .bill-list { display: grid; gap: 7px; max-height: 320px; overflow-y: auto; }
+    .bill-list-empty { padding: 20px; color: var(--muted); font-size: 12px; text-align: center; }
+    .bill-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 5px; background: white; }
+    .bill-item.is-current { border-color: var(--green); background: var(--green-soft); }
+    .bill-item-info { flex: 1; min-width: 0; display: grid; gap: 2px; padding: 0; border: 0; background: none; text-align: left; }
+    .bill-item-name { overflow: hidden; color: var(--ink); font-size: 13px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+    .bill-item-meta { color: var(--muted); font-size: 11px; }
     main { max-width: 1220px; margin: 0 auto; padding: 25px 28px 60px; }
     .family-settlement { margin-bottom: 24px; }
     .families-section { min-width: 0; }
@@ -56,6 +63,7 @@
     .family-table th:nth-child(4) { width: 25%; }
     .family-table th:nth-child(5) { width: 11%; }
     .family-table .number { text-align: right; white-space: nowrap; }
+    .family-table th.settlement-head { text-align: left; }
     .family-table .family-action { text-align: center; }
     .family-table tfoot th, .family-table tfoot td { padding: 12px; border-top: 1px solid var(--line); border-bottom: 0; background: rgba(35,99,79,.035); }
     .family-table tfoot th { color: var(--ink); font-size: 12px; font-weight: 750; letter-spacing: 0; text-align: left; text-transform: none; }
@@ -94,6 +102,7 @@
     .subrow { display: grid; grid-template-columns: minmax(145px, 1fr) 90px; gap: 6px; align-items: center; min-height: 39px; border-bottom: 1px solid #f0f1ed; }
     .rows-heading { display: grid; grid-template-columns: minmax(145px, 1fr) 90px; gap: 6px; }
     .subrow input, .subrow select, .paid-row select, .paid-row input { width: 100%; min-width: 0; height: 32px; padding: 0 8px; border: 1px solid transparent; border-radius: 4px; outline: 0; color: var(--ink); background: transparent; font-size: 12px; }
+    .subrow span[data-family-name] { display: flex; align-items: center; height: 32px; padding: 0 8px; font-size: 12px; }
     .subrow input:focus, .subrow select:focus, .paid-row select:focus, .paid-row input:focus { border-color: #a9c3b6; background: white; }
     .subrow input.amount, .paid-row input.amount { text-align: right; font-variant-numeric: tabular-nums; }
     .row-total { overflow: hidden; color: var(--ink); font-size: 12px; font-weight: 650; text-align: right; text-overflow: clip; white-space: nowrap; font-variant-numeric: tabular-nums; }
@@ -124,8 +133,6 @@
       .layout { grid-template-columns: 1fr; gap: 24px; }
     }
     @media (max-width: 480px) {
-      .local-note { font-size: 0; gap: 0; }
-      .local-note::before { width: 8px; height: 8px; }
       .subrow, .rows-heading { grid-template-columns: minmax(90px, 1fr) 64px; gap: 3px; }
       .subrow input, .subrow select { padding: 0 4px; font-size: 11px; }
       .subrow input, .subrow select, .row-total { font-size: 10px; }
@@ -143,10 +150,12 @@
 </head>
 <body>
   <header class="topbar">
-    <div class="brand"><span class="brand-mark" aria-hidden="true">g</span> Get Together</div>
+    <div class="brand"><span class="brand-mark" aria-hidden="true">gt</span> Get Together</div>
     <div class="topbar-actions">
-      <button class="share-button" id="shareButton" type="button" aria-label="Create share link" title="Create share link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l2-2A5 5 0 0 0 12 3.93l-1.15 1.14M14 11a5 5 0 0 0-7.07 0l-2 2A5 5 0 0 0 12 20.07l1.15-1.14"/></svg></button>
-      <div class="local-note">Saved on this device</div>
+      <button class="icon-action-button" id="newBillButton" type="button" aria-label="Start a new bill" title="Start a new bill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6M9 15h6"/></svg></button>
+      <button class="icon-action-button" id="openButton" type="button" aria-label="Open a saved bill" title="Open a saved bill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg></button>
+      <button class="icon-action-button" id="saveButton" type="button" aria-label="Save bill to this device" title="Save bill to this device"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 4h12l3 3v13H5V4Z"/><path d="M8 4v5h7V4M8 14h8v6H8z"/></svg></button>
+      <button class="icon-action-button" id="shareButton" type="button" aria-label="Create share link" title="Create share link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l2-2A5 5 0 0 0 12 3.93l-1.15 1.14M14 11a5 5 0 0 0-7.07 0l-2 2A5 5 0 0 0 12 20.07l1.15-1.14"/></svg></button>
     </div>
   </header>
   <main>
@@ -158,13 +167,13 @@
         </div>
         <div class="family-table-wrap">
           <table class="family-table">
-            <thead><tr><th scope="col">Family head</th><th class="number" scope="col">Share</th><th class="number" scope="col">Paid</th><th class="number" scope="col">Settlement</th><th class="family-action" scope="col"><span class="visually-hidden">Actions</span></th></tr></thead>
+            <thead><tr><th scope="col">Family head</th><th class="number" scope="col">Share</th><th class="number" scope="col">Paid</th><th class="number settlement-head" scope="col">Settlement</th><th class="family-action" scope="col"><span class="visually-hidden">Actions</span></th></tr></thead>
             <tbody id="familyList"></tbody>
             <tfoot><tr class="family-total-row">
               <th scope="row">Total</th>
               <td class="number"><strong id="grandTotal">₹0.00</strong></td>
               <td class="number"><strong id="paidTotal">₹0.00</strong></td>
-              <td class="number"><div class="total-difference"><span>Difference</span><strong id="difference">₹0.00</strong></div></td>
+              <td class="number"><div class="total-difference"><strong id="difference">₹0.00</strong></div></td>
               <td></td>
             </tr></tfoot>
           </table>
@@ -186,11 +195,30 @@
   <dialog class="share-dialog" id="shareDialog" aria-labelledby="shareDialogTitle">
     <div class="share-dialog-head"><h2 id="shareDialogTitle">Share this bill</h2><button class="share-close" id="closeShareDialog" type="button" aria-label="Close">&times;</button></div>
     <p class="share-dialog-copy">The link shows the bill data in a readable format. Anyone with the link can view and edit their copy.</p>
-    <div class="share-link-row"><input id="shareUrl" type="url" readonly aria-label="Share link"><button class="button" id="copyShareUrl" type="button">Copy link</button></div>
+    <div class="share-link-row"><input id="shareUrl" type="url" readonly aria-label="Share link"></div>
+    <div class="share-actions">
+      <button class="button button-secondary" id="copyShareUrl" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 9h10v10H9zM5 15V5h10"/></svg> Copy link</button>
+      <button class="button" id="nativeShareUrl" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.07 0l2-2A5 5 0 0 0 12 3.93l-1.15 1.14M14 11a5 5 0 0 0-7.07 0l-2 2A5 5 0 0 0 12 20.07l1.15-1.14"/></svg> Share link</button>
+    </div>
+  </dialog>
+  <dialog class="share-dialog" id="openDialog" aria-labelledby="openDialogTitle">
+    <div class="share-dialog-head"><h2 id="openDialogTitle">Open a saved bill</h2><button class="share-close" id="closeOpenDialog" type="button" aria-label="Close">&times;</button></div>
+    <p class="share-dialog-copy">Choose a bill saved on this device.</p>
+    <div class="bill-list" id="billList"></div>
+  </dialog>
+  <dialog class="share-dialog" id="confirmDialog" aria-labelledby="confirmDialogTitle">
+    <div class="share-dialog-head"><h2 id="confirmDialogTitle">Unsaved changes</h2><button class="share-close" id="closeConfirmDialog" type="button" aria-label="Close">&times;</button></div>
+    <p class="share-dialog-copy" id="confirmDialogMessage"></p>
+    <div class="share-actions">
+      <button class="button button-secondary" id="confirmDiscard" type="button">Discard</button>
+      <button class="button" id="confirmSave" type="button">Save &amp; continue</button>
+    </div>
   </dialog>
   <script>
     (() => {
-      const storageKey = 'gathering-bill-v2';
+      const billIndexKey = 'gathering-bills-index';
+      const currentBillKey = 'gathering-current-bill';
+      const billDataKey = billId => `gathering-bill-data-${billId}`;
       const icons = {
         remove: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M10 11v6m4-6v6M5 7l1 13h12l1-13M9 7V4h6v3"/></svg>'
       };
@@ -229,20 +257,9 @@
         });
         return { people: familyEntries, payers, expenses };
       };
-      let sharedState = null;
-      try {
-        const decoded = shareToken ? decodeReadableShare(shareToken) : null;
-        if (isBillState(decoded)) sharedState = decoded;
-      } catch { sharedState = null; }
-      const shareFingerprint = shareToken ? Array.from(shareToken).reduce((hash, character) => Math.imul(hash ^ character.charCodeAt(0), 16777619), 2166136261).toString(36) : '';
-      const activeStorageKey = sharedState ? `${storageKey}-share-${shareFingerprint}` : storageKey;
-      let state;
-      try {
-        const saved = JSON.parse(localStorage.getItem(activeStorageKey));
-        if (isBillState(saved)) state = saved;
-        else if (sharedState) state = sharedState;
-        else state = { people: [], payers: [], expenses: [] };
-      } catch { state = { people: [], payers: [], expenses: [] }; }
+      let currentBillId = '';
+      let lastSavedToken = '';
+      let state = { people: [], payers: [], expenses: [] };
 
       const money = value => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2 }).format(Number(value) || 0);
       const safe = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
@@ -260,26 +277,56 @@
       const personTotal = personId => state.expenses.reduce((sum, expense) => sum + expensePersonTotal(expense, personId), 0);
       const payerTotal = payerId => state.expenses.reduce((sum, expense) => sum + expense.payments.filter(payment => payment.payerId === payerId).reduce((subtotal, row) => subtotal + (Number(row.amount) || 0), 0), 0);
       const toPaise = amount => Math.round((Number(amount) || 0) * 100);
-      const nameKey = name => String(name || '').toLocaleLowerCase().replace(/\b(family|ji)\b/g, ' ').replace(/[^a-z0-9]+/g, ' ').trim();
-      const payerFamilyId = payer => {
-        if (state.people.some(family => family.id === payer.familyId)) return payer.familyId;
-        const payerKey = nameKey(payer.name);
-        if (!payerKey) return '';
-        const matches = state.people.filter(family => {
-          const familyKey = nameKey(family.name);
-          return familyKey && (payerKey === familyKey || payerKey.startsWith(familyKey + ' ') || familyKey.startsWith(payerKey + ' '));
-        });
-        return matches.length === 1 ? matches[0].id : '';
-      };
+      const payerFamilyId = payer => state.people.some(family => family.id === payer.familyId) ? payer.familyId : '';
       const payerForFamily = familyId => state.payers.find(payer => payerFamilyId(payer) === familyId);
       const familyName = family => {
         const headName = payerForFamily(family.id)?.name.trim();
         return headName ? `${headName}'s family` : family.name || 'Unnamed family';
       };
-      state.people.forEach(family => {
-        if (!payerForFamily(family.id)) state.payers.push({ id: id('head'), name: '', familyId: family.id });
-      });
-      const persist = () => localStorage.setItem(activeStorageKey, JSON.stringify(state));
+      const loadBillIndex = () => { try { return JSON.parse(localStorage.getItem(billIndexKey)) || []; } catch { return []; } };
+      const saveBillIndex = list => localStorage.setItem(billIndexKey, JSON.stringify(list));
+      const createBill = (token, name) => {
+        const billId = id('bill');
+        localStorage.setItem(billDataKey(billId), token);
+        const list = loadBillIndex();
+        list.push({ id: billId, name, updatedAt: Date.now() });
+        saveBillIndex(list);
+        return billId;
+      };
+      const updateBillToken = (billId, token) => {
+        localStorage.setItem(billDataKey(billId), token);
+        const list = loadBillIndex();
+        const entry = list.find(bill => bill.id === billId);
+        if (entry) { entry.updatedAt = Date.now(); saveBillIndex(list); }
+      };
+      const deleteBill = billId => {
+        localStorage.removeItem(billDataKey(billId));
+        saveBillIndex(loadBillIndex().filter(bill => bill.id !== billId));
+        if (currentBillId === billId) { currentBillId = ''; localStorage.removeItem(currentBillKey); }
+      };
+      const setCurrentBill = billId => {
+        currentBillId = billId;
+        localStorage.setItem(currentBillKey, billId);
+      };
+      const loadStateFromBill = billId => {
+        const token = localStorage.getItem(billDataKey(billId));
+        if (!token) return null;
+        try {
+          const decoded = decodeReadableShare(token);
+          return isBillState(decoded) ? decoded : null;
+        } catch { return null; }
+      };
+      const suggestBillName = () => {
+        const headName = state.payers.map(payer => payer.name?.trim()).find(Boolean);
+        return headName ? `${headName}'s bill` : `Bill ${new Date().toLocaleDateString()}`;
+      };
+      const persist = () => {
+        const token = buildShareToken();
+        if (!currentBillId) setCurrentBill(createBill(token, suggestBillName()));
+        else updateBillToken(currentBillId, token);
+        lastSavedToken = token;
+      };
+      const hasUnsavedChanges = () => buildShareToken() !== lastSavedToken;
       const options = (list, selectedId, emptyLabel, labelFor = entry => entry.name) => {
         const placeholder = `<option value="">${safe(emptyLabel)}</option>`;
         return placeholder + list.map(entry => `<option value="${safe(entry.id)}" ${entry.id === selectedId ? 'selected' : ''}>${safe(labelFor(entry) || 'Unnamed')}</option>`).join('');
@@ -344,7 +391,6 @@
           : '<div class="empty-state"><strong>No expenses yet</strong>Add the first bill item when you are ready.</div>';
         document.getElementById('expenseCount').textContent = state.expenses.length;
         updateSummary();
-        persist();
       }
 
       function updateFamilyNames() {
@@ -360,12 +406,15 @@
 
       function settlementPlan() {
         const balances = new Map(state.people.map(family => [family.id, -toPaise(personTotal(family.id))]));
+        const activeFamilies = new Set([...balances].filter(([, balance]) => balance !== 0).map(([familyId]) => familyId));
         let unlinkedPayments = 0;
         state.payers.forEach(payer => {
           const familyId = payerFamilyId(payer);
           state.expenses.forEach(expense => expense.payments.filter(payment => payment.payerId === payer.id).forEach(payment => {
-            if (balances.has(familyId)) balances.set(familyId, balances.get(familyId) + toPaise(payment.amount));
-            else unlinkedPayments += toPaise(payment.amount);
+            if (balances.has(familyId)) {
+              balances.set(familyId, balances.get(familyId) + toPaise(payment.amount));
+              if (toPaise(payment.amount) !== 0) activeFamilies.add(familyId);
+            } else unlinkedPayments += toPaise(payment.amount);
           }));
         });
         const debtors = [...balances].filter(([, balance]) => balance < 0).map(([familyId, balance]) => ({ familyId, amount: -balance }));
@@ -384,7 +433,7 @@
           if (creditor.amount === 0) creditorIndex++;
         }
         const unbalanced = debtors.slice(debtorIndex).reduce((sum, entry) => sum + entry.amount, 0) + creditors.slice(creditorIndex).reduce((sum, entry) => sum + entry.amount, 0);
-        return { transfers, unlinkedPayments, unbalanced };
+        return { transfers, unlinkedPayments, unbalanced, activeFamilies };
       }
 
       function renderSettlement() {
@@ -408,7 +457,9 @@
             const family = state.people.find(entry => entry.id === counterpartyId);
             return payerForFamily(counterpartyId)?.name.trim() || family?.name || 'Unnamed family';
           }).join(', ');
-          cell.textContent = amount ? `${isPayer ? 'Pays' : 'Receives'} ${money(amount / 100)} ${isPayer ? 'to' : 'from'} ${names}` : 'Settled';
+          cell.textContent = amount
+            ? `${isPayer ? 'Pays' : 'Receives'} ${money(amount / 100)} ${isPayer ? 'to' : 'from'} ${names}`
+            : (plan.activeFamilies.has(familyId) ? 'Settled' : '—');
         });
         const warning = document.getElementById('settlementWarning');
         const messages = [];
@@ -440,7 +491,6 @@
           if (share) share.textContent = money(personTotal(family.id));
           if (paid) paid.textContent = money(payer ? payerTotal(payer.id) : 0);
         });
-        persist();
       }
 
       function findRecord(target) {
@@ -522,7 +572,7 @@
         clearTimeout(toastTimer);
         toastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
       };
-      const buildShareUrl = () => {
+      const buildShareToken = () => {
         const familyTokens = state.people.map((family, index) => `F${index + 1}-${encodeField(payerForFamily(family.id)?.name || '')}`);
         const expenseTokens = state.expenses.map((expense, index) => {
           const item = `${encodeField(expense.title || `Item ${index + 1}`)}@${Number(expense.unitPrice) || 0}`;
@@ -538,18 +588,14 @@
           }).filter(Boolean);
           return [item, ...allocations, ...contributions].join(',');
         });
-        return `${location.href.split('#')[0]}#data=${[familyTokens.join(','), ...expenseTokens].join('|')}`;
+        return [familyTokens.join(','), ...expenseTokens].join('|');
       };
-      document.getElementById('shareButton').addEventListener('click', async () => {
+      const buildShareUrl = () => `${location.href.split('#')[0]}#data=${buildShareToken()}`;
+      document.getElementById('shareButton').addEventListener('click', () => {
         shareUrlInput.value = buildShareUrl();
-        try {
-          await navigator.clipboard.writeText(shareUrlInput.value);
-          announce('Share link copied');
-        } catch {
-          shareDialog.showModal();
-          shareUrlInput.focus();
-          shareUrlInput.select();
-        }
+        shareDialog.showModal();
+        shareUrlInput.focus();
+        shareUrlInput.select();
       });
       document.getElementById('closeShareDialog').addEventListener('click', () => shareDialog.close());
       document.getElementById('copyShareUrl').addEventListener('click', async () => {
@@ -563,7 +609,123 @@
           announce('Link selected. Copy it to share.');
         }
       });
+      const nativeShareButton = document.getElementById('nativeShareUrl');
+      if (!navigator.share) nativeShareButton.hidden = true;
+      nativeShareButton.addEventListener('click', async () => {
+        try {
+          await navigator.share({ title: 'Get Together bill', url: shareUrlInput.value });
+          shareDialog.close();
+        } catch (error) {
+          if (error?.name !== 'AbortError') announce('Could not open share sheet');
+        }
+      });
+      const confirmDialog = document.getElementById('confirmDialog');
+      const confirmDialogMessage = document.getElementById('confirmDialogMessage');
+      let confirmResolve = null;
+      const resolveConfirm = choice => {
+        if (!confirmResolve) return;
+        const resolve = confirmResolve;
+        confirmResolve = null;
+        confirmDialog.close();
+        resolve(choice);
+      };
+      const askUnsavedChanges = message => new Promise(resolve => {
+        confirmResolve = resolve;
+        confirmDialogMessage.textContent = message;
+        confirmDialog.showModal();
+      });
+      document.getElementById('confirmSave').addEventListener('click', () => resolveConfirm('save'));
+      document.getElementById('confirmDiscard').addEventListener('click', () => resolveConfirm('discard'));
+      document.getElementById('closeConfirmDialog').addEventListener('click', () => resolveConfirm('cancel'));
+      confirmDialog.addEventListener('cancel', () => resolveConfirm('cancel'));
+      const openDialog = document.getElementById('openDialog');
+      const billListElement = document.getElementById('billList');
+      const renderBillList = () => {
+        const list = loadBillIndex().slice().sort((a, b) => b.updatedAt - a.updatedAt);
+        billListElement.innerHTML = list.length ? list.map(bill => `
+          <div class="bill-item${bill.id === currentBillId ? ' is-current' : ''}">
+            <button class="bill-item-info" type="button" data-action="open-bill" data-bill="${safe(bill.id)}">
+              <span class="bill-item-name">${safe(bill.name)}</span>
+              <span class="bill-item-meta">${safe(new Date(bill.updatedAt).toLocaleString())}</span>
+            </button>
+            <button class="icon-button" type="button" data-action="delete-bill" data-bill="${safe(bill.id)}" aria-label="Delete ${safe(bill.name)}" title="Delete bill">${icons.remove}</button>
+          </div>`).join('') : '<p class="bill-list-empty">No saved bills yet.</p>';
+      };
+      document.getElementById('saveButton').addEventListener('click', () => {
+        persist();
+        announce('Bill saved to this device');
+      });
+      document.getElementById('newBillButton').addEventListener('click', async () => {
+        if (hasUnsavedChanges()) {
+          const choice = await askUnsavedChanges('You have unsaved changes to this bill. Save them before starting a new bill?');
+          if (choice === 'cancel') return;
+          if (choice === 'save') persist();
+        }
+        state = { people: [], payers: [], expenses: [] };
+        currentBillId = '';
+        localStorage.removeItem(currentBillKey);
+        render();
+        lastSavedToken = buildShareToken();
+        announce('Started a new bill');
+      });
+      document.getElementById('openButton').addEventListener('click', () => {
+        renderBillList();
+        openDialog.showModal();
+      });
+      document.getElementById('closeOpenDialog').addEventListener('click', () => openDialog.close());
+      billListElement.addEventListener('click', async event => {
+        const openItem = event.target.closest('[data-action="open-bill"]');
+        const deleteItem = event.target.closest('[data-action="delete-bill"]');
+        if (openItem) {
+          if (hasUnsavedChanges()) {
+            const choice = await askUnsavedChanges('You have unsaved changes to the current bill. Save them before opening the selected bill?');
+            if (choice === 'cancel') return;
+            if (choice === 'save') persist();
+          }
+          const loaded = loadStateFromBill(openItem.dataset.bill);
+          if (loaded) {
+            state = loaded;
+            setCurrentBill(openItem.dataset.bill);
+            lastSavedToken = buildShareToken();
+            openDialog.close();
+            render();
+            announce('Bill loaded');
+          } else announce('Could not load this bill');
+          return;
+        }
+        if (deleteItem) {
+          deleteBill(deleteItem.dataset.bill);
+          renderBillList();
+        }
+      });
       window.addEventListener('hashchange', () => window.location.reload());
+      window.addEventListener('beforeunload', event => {
+        if (!hasUnsavedChanges()) return;
+        event.preventDefault();
+        event.returnValue = '';
+      });
+      const initializeState = () => {
+        if (shareToken) {
+          try {
+            const decoded = decodeReadableShare(shareToken);
+            if (isBillState(decoded)) {
+              state = decoded;
+              setCurrentBill(createBill(buildShareToken(), suggestBillName()));
+              history.replaceState(null, '', location.pathname + location.search);
+              const reloaded = loadStateFromBill(currentBillId);
+              if (reloaded) state = reloaded;
+              return;
+            }
+          } catch { /* ignore malformed share token */ }
+        }
+        const savedBillId = localStorage.getItem(currentBillKey);
+        if (savedBillId) {
+          const loaded = loadStateFromBill(savedBillId);
+          if (loaded) { state = loaded; currentBillId = savedBillId; return; }
+        }
+      };
+      initializeState();
+      lastSavedToken = buildShareToken();
       render();
     })();
   </script>
